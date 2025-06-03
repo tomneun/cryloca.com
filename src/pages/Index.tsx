@@ -92,33 +92,46 @@ const Index = () => {
         <section className="py-16 px-4">
           <div className="container mx-auto">
             <h3 className="text-2xl font-bold mb-8 text-center">Aktuelle Angebote</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {publicProducts.slice(0, 6).map((product) => (
-                <div key={product.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-red-500/50 transition-colors">
-                  <div className="aspect-video bg-gray-700 relative">
-                    <img 
-                      src={product.images[0] || '/placeholder.svg'} 
-                      alt={product.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-semibold mb-2 truncate">{product.title}</h4>
-                    <p className="text-gray-400 text-sm mb-3 line-clamp-2">{product.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-red-400 font-bold">{product.price} {product.currency}</span>
-                      <Button 
-                        size="sm"
-                        onClick={() => navigate(`/shop/${product.pseudonym}/product/${product.id}`)}
-                        className="bg-red-600 hover:bg-red-700"
-                      >
-                        Ansehen
-                      </Button>
+            {publicProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <ShoppingBag className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400">Noch keine Produkte verfügbar</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {publicProducts.slice(0, 6).map((product) => (
+                  <div key={product.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-red-500/50 transition-colors">
+                    <div className="aspect-video bg-gray-700 relative">
+                      {product.images.length > 0 ? (
+                        <img 
+                          src={product.images[0]} 
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <ShoppingBag className="h-12 w-12 text-gray-500" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h4 className="font-semibold mb-2 truncate">{product.title}</h4>
+                      <p className="text-gray-400 text-sm mb-3 line-clamp-2">{product.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-red-400 font-bold">{product.price} {product.currency}</span>
+                        <Button 
+                          size="sm"
+                          onClick={() => navigate(`/shop/${product.pseudonym}/product/${product.id}`)}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Ansehen
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </div>

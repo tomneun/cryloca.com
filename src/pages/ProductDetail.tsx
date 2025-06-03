@@ -72,11 +72,17 @@ const ProductDetail = () => {
           {/* Product Images */}
           <div className="space-y-4">
             <div className="aspect-square bg-gray-800 rounded-lg overflow-hidden border border-gray-700">
-              <img 
-                src={product.images[0] || '/placeholder.svg'} 
-                alt={product.title}
-                className="w-full h-full object-cover"
-              />
+              {product.images.length > 0 ? (
+                <img 
+                  src={product.images[0]} 
+                  alt={product.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <ShoppingBag className="h-24 w-24 text-gray-500" />
+                </div>
+              )}
             </div>
             {product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2">

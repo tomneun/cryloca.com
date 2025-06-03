@@ -26,48 +26,10 @@ export const useProducts = () => {
         setProducts(JSON.parse(savedProducts));
       } catch (error) {
         console.error('Failed to parse products:', error);
-        // Initialize with demo data
-        initializeDemoData();
+        localStorage.removeItem('anonshop_products');
       }
-    } else {
-      initializeDemoData();
     }
   }, []);
-
-  const initializeDemoData = () => {
-    const demoProducts: Product[] = [
-      {
-        id: 'demo-1',
-        pseudonym: 'crypto_dealer',
-        title: 'Privacy Guide PDF',
-        description: 'Complete guide to digital privacy and anonymity. 150 pages of expert knowledge.',
-        price: 0.05,
-        currency: 'XMR',
-        images: ['/placeholder.svg'],
-        stock: 100,
-        category: 'E-Books',
-        visibility: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: 'demo-2',
-        pseudonym: 'music_anon',
-        title: 'Underground Beats Album',
-        description: 'Exclusive electronic music collection. High quality FLAC files.',
-        price: 0.08,
-        currency: 'XMR',
-        images: ['/placeholder.svg'],
-        stock: 50,
-        category: 'Music',
-        visibility: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ];
-    setProducts(demoProducts);
-    localStorage.setItem('anonshop_products', JSON.stringify(demoProducts));
-  };
 
   const addProduct = (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newProduct: Product = {

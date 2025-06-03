@@ -1,73 +1,115 @@
-# Welcome to your Lovable project
 
-## Project info
+# AnonShop - Anonymous Tor Marketplace
 
-**URL**: https://lovable.dev/projects/2b36c858-8d26-47ac-ad10-c5cfe83067d4
+A decentralized anonymous marketplace for digital goods running on Tor Hidden Services.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Anonymous Sessions**: Pseudonym-based authentication without personal data
+- **Digital Marketplace**: Buy and sell digital products (e-books, music, software, images)
+- **Tor Integration Ready**: Designed to run as a Tor Hidden Service
+- **Monero Payments**: Cryptocurrency payment integration
+- **No Registration**: No email, password, or personal information required
+- **LocalStorage Persistence**: Session and cart data stored locally
+- **Dark Theme**: Privacy-focused UI design
 
-**Use Lovable**
+## Frontend Structure
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2b36c858-8d26-47ac-ad10-c5cfe83067d4) and start prompting.
+- **React + TypeScript**: Modern frontend framework
+- **Tailwind CSS**: Utility-first styling
+- **React Router**: Client-side routing
+- **Custom Hooks**: Session, cart, and product management
+- **Responsive Design**: Mobile and desktop compatible
 
-Changes made via Lovable will be committed automatically to this repo.
+## Pages
 
-**Use your preferred IDE**
+- `/` - Landing page and pseudonym creation
+- `/my-shop` - Personal shop dashboard
+- `/shop/:pseudonym` - Public shop view
+- `/shop/:pseudonym/product/:id` - Product details
+- `/checkout` - Shopping cart and payment
+- `/chat/:withPseudonym` - Anonymous messaging (optional)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Backend Integration Points
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+The frontend is ready for backend integration with the following API endpoints:
 
-Follow these steps:
+### Authentication
+- Session management via localStorage (ready for backend session validation)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Products
+- `GET /api/products` - List all public products
+- `POST /api/products` - Create new product (with file upload)
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+- `GET /api/products/:id` - Get product details
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Shops
+- `GET /api/shops` - List all shops
+- `GET /api/shops/:pseudonym` - Get shop details and products
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Orders/Checkout
+- `POST /api/checkout/create` - Create order and generate Monero address
+- `POST /api/checkout/confirm` - Confirm payment with transaction hash
+- `GET /download/:orderId/:token` - Download purchased content
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Chat (Optional)
+- `POST /api/chat/send` - Send encrypted message
+- `GET /api/chat/fetch` - Retrieve messages
+
+## Installation & Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## Backend Requirements
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+To make this a fully functional marketplace, you'll need to implement:
 
-**Use GitHub Codespaces**
+1. **Node.js/Express Backend**
+   - SQLite database for products, orders, shops
+   - File upload handling (Multer)
+   - Monero wallet integration
+   - Session management
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. **Tor Hidden Service Setup**
+   - Configure torrc for hidden service
+   - Run backend on localhost:3000
+   - Generate .onion address
 
-## What technologies are used for this project?
+3. **Database Schema**
+   ```sql
+   shops(pseudonym TEXT PRIMARY KEY, description TEXT, createdAt TEXT)
+   products(id TEXT PRIMARY KEY, pseudonym TEXT, title TEXT, description TEXT, price REAL, currency TEXT, images TEXT, stock INTEGER, category TEXT, visibility INTEGER, createdAt TEXT, updatedAt TEXT)
+   orders(id TEXT PRIMARY KEY, pseudonym_buyer TEXT, pseudonym_seller TEXT, productId TEXT, quantity INTEGER, price REAL, currency TEXT, paymentAddress TEXT, txHash TEXT, status TEXT, createdAt TEXT, updatedAt TEXT)
+   chats(id TEXT PRIMARY KEY, fromPseudonym TEXT, toPseudonym TEXT, ciphertext TEXT, createdAt TEXT)
+   ```
 
-This project is built with:
+4. **Monero Integration**
+   - monero-wallet-rpc for payment processing
+   - Address generation and transaction verification
+   - Download token generation after payment confirmation
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+This frontend can be deployed as static files served by your Node.js backend or any web server configured to work with Tor Hidden Services.
 
-Simply open [Lovable](https://lovable.dev/projects/2b36c858-8d26-47ac-ad10-c5cfe83067d4) and click on Share -> Publish.
+## Security Notes
 
-## Can I connect a custom domain to my Lovable project?
+- All external dependencies removed for Tor compatibility
+- No CDN requests - everything served locally
+- Pseudonym-based sessions for anonymity
+- Designed for end-to-end encryption where needed
+- No logging of sensitive user data
 
-Yes, you can!
+## License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT License - See LICENSE file for details

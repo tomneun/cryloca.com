@@ -72,7 +72,7 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       stock: parseInt(formData.stock),
       category: formData.category.trim(),
       visibility: formData.visibility,
-      images: ['/placeholder.svg'] // Demo image
+      images: [] // Will be handled by backend file upload
     };
 
     if (productId) {

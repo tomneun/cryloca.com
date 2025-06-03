@@ -33,40 +33,73 @@ const Checkout = () => {
     );
   }
 
-  const createOrder = () => {
-    // Simulate API call to create order
-    const mockOrderId = 'order-' + Date.now();
-    const mockAddress = '4' + Array.from({length: 94}, () => Math.random().toString(36)[2]).join('');
-    const totalXMR = getTotalPrice();
-
-    setPaymentData({
-      orderId: mockOrderId,
-      paymentAddress: mockAddress,
-      totalXMR
-    });
-    setStep('payment');
+  const createOrder = async () => {
+    // TODO: Replace with actual API call to backend
+    // POST /api/checkout/create with cart contents
+    try {
+      const response = await fetch('/api/checkout/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ cart })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create order');
+      }
+      
+      const data = await response.json();
+      setPaymentData({
+        orderId: data.orderId,
+        paymentAddress: data.paymentAddress,
+        totalXMR: data.totalXMR
+      });
+      setStep('payment');
+    } catch (error) {
+      console.error('Order creation failed:', error);
+      alert('Fehler beim Erstellen der Bestellung. Bitte versuchen Sie es erneut.');
+    }
   };
 
-  const confirmPayment = () => {
+  const confirmPayment = async () => {
     if (!txHash.trim()) {
       alert('Bitte geben Sie den Transaction Hash ein');
       return;
     }
     
-    // Simulate payment confirmation
-    setStep('confirm');
-    clearCart();
+    // TODO: Replace with actual API call to backend
+    // POST /api/checkout/confirm with orderId and txHash
+    try {
+      const response = await fetch('/api/checkout/confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ 
+          orderId: paymentData.orderId,
+          txHash: txHash.trim()
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Payment confirmation failed');
+      }
+      
+      setStep('confirm');
+      clearCart();
+    } catch (error) {
+      console.error('Payment confirmation failed:', error);
+      alert('Fehler bei der Zahlungsbestätigung. Bitte versuchen Sie es erneut.');
+    }
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const generateQRCode = (address: string) => {
-    // Simple QR code simulation using placeholder
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=monero:${address}?amount=${paymentData.totalXMR}`;
   };
 
   return (
@@ -136,19 +169,7 @@ const Checkout = () => {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Monero Zahlung</h2>
             
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 text-center">
-              <h3 className="text-lg font-semibold mb-4">QR-Code scannen</h3>
-              <div className="bg-white p-4 rounded-lg inline-block mb-4">
-                <img 
-                  src={generateQRCode(paymentData.paymentAddress)}
-                  alt="Monero Payment QR Code"
-                  className="w-48 h-48"
-                />
-              </div>
-              <p className="text-sm text-gray-400">Oder Adresse manuell kopieren:</p>
-            </div>
-
-            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h4 className="font-semibold mb-2">Zahlungsdetails</h4>
               <div className="space-y-3 text-sm">
                 <div>
