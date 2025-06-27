@@ -11,6 +11,10 @@ import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import Chat from "./pages/Chat";
+import Rules from "./pages/Rules";
+import AdminDashboard from "./pages/AdminDashboard";
+import VendorLicense from "./pages/VendorLicense";
+import LicenseThanks from "./pages/LicenseThanks";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +26,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/vendor-license" element={<VendorLicense />} />
+          <Route path="/license-thanks" element={<LicenseThanks />} />
           <Route path="/my-shop" element={<MyShop />} />
           <Route path="/shop/:pseudonym" element={<Shop />} />
           <Route path="/shop/:pseudonym/product/:id" element={<ProductDetail />} />
