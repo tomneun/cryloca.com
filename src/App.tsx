@@ -10,6 +10,7 @@ import MyShop from "./pages/MyShop";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import Chat from "./pages/Chat";
 import Rules from "./pages/Rules";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/shop/:pseudonym" element={<Shop />} />
           <Route path="/shop/:pseudonym/product/:id" element={<ProductDetail />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
           <Route path="/chat/:withPseudonym" element={<Chat />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

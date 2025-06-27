@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Settings, Euro, ArrowLeft } from 'lucide-react';
+import { Shield, Settings, Euro, ArrowLeft, Code } from 'lucide-react';
+import VendorCodeManager from '@/components/VendorCodeManager';
+import AdminContact from '@/components/AdminContact';
 
 const AdminDashboard = () => {
   const [sessionId, setSessionId] = useState('');
@@ -18,7 +20,6 @@ const AdminDashboard = () => {
   const ADMIN_SESSION_ID = '053aa07e41ee40915fcb71fa6f2512cf7156191d3fc1742f5c76ebd4039bcebe4d';
 
   useEffect(() => {
-    // Load current license fee
     const savedFee = localStorage.getItem('vendor_license_fee');
     if (savedFee) {
       setLicenseFee(parseFloat(savedFee));
@@ -95,6 +96,7 @@ const AdminDashboard = () => {
             </div>
           </CardContent>
         </Card>
+        <AdminContact />
       </div>
     );
   }
@@ -137,7 +139,7 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Update License Fee */}
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-gray-800 border-gray-700 mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Euro className="h-6 w-6 text-green-400" />
@@ -172,7 +174,12 @@ const AdminDashboard = () => {
             </form>
           </CardContent>
         </Card>
+
+        {/* Vendor Code Management */}
+        <VendorCodeManager />
       </div>
+      
+      <AdminContact />
     </div>
   );
 };
