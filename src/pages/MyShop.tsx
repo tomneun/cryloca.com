@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff, LogOut } from 'lucide-react';
 import ProductForm from '@/components/ProductForm';
 import VendorBanner from '@/components/VendorBanner';
+
 const MyShop = () => {
   const {
     session,
@@ -37,7 +38,8 @@ const MyShop = () => {
       visibility: !currentVisibility
     });
   };
-  return <div className="min-h-screen bg-gray-900 text-gray-100">
+  return (
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
       <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
@@ -60,17 +62,19 @@ const MyShop = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Shop Info */}
+        {/* Shop Info with Banner */}
         <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
           <h2 className="text-2xl font-bold mb-2">Shop: @{session.pseudonym}</h2>
           <p className="text-gray-400">Erstellt am: {new Date(session.createdAt).toLocaleDateString('de-DE')}</p>
           <p className="text-sm text-gray-500 mt-2">
             Shop-URL: /shop/{session.pseudonym}
           </p>
+          
+          {/* Vendor Banner inside the shop info section */}
+          <div className="mt-6 pt-6 border-t border-gray-700">
+            <VendorBanner />
+          </div>
         </div>
-
-        {/* Vendor Banner Section */}
-        <VendorBanner />
 
         {/* Products Section */}
         <div className="flex items-center justify-between mb-6">
@@ -131,6 +135,8 @@ const MyShop = () => {
       setShowProductForm(false);
       setEditingProduct(null);
     }} />}
-    </div>;
+    </div>
+  );
 };
+
 export default MyShop;
