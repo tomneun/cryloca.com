@@ -31,7 +31,7 @@ const ProductBanner = ({
             {shopLogo && <img src={shopLogo} alt="Logo" className="w-6 h-6 rounded" />}
             <h3 className="font-semibold text-sm truncate">@{pseudonym}</h3>
           </div>
-          <p className="text-xs text-gray-400 truncate">{title}</p>
+          
         </div>
         
         <div className="mt-2">
