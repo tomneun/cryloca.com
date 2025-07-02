@@ -13,7 +13,7 @@ interface ProductBannerProps {
   shopLogo?: string;
 }
 
-const ProductBanner = ({ pseudonym, title, price, currency, image, country, shopLogo }: ProductBannerProps) => {
+const ProductBanner = ({ pseudonym, title, image, country, shopLogo }: ProductBannerProps) => {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +21,7 @@ const ProductBanner = ({ pseudonym, title, price, currency, image, country, shop
       onClick={() => navigate(`/shop/${pseudonym}`)}
       className="bg-gray-800 rounded-lg border border-gray-700 hover:border-red-500/50 transition-colors cursor-pointer h-48 flex flex-col"
     >
-      <div className="h-24 bg-gray-700 relative rounded-t-lg overflow-hidden">
+      <div className="h-32 bg-gray-700 relative rounded-t-lg overflow-hidden">
         {image ? (
           <img src={image} alt={title} className="w-full h-full object-cover" />
         ) : (
@@ -44,7 +44,7 @@ const ProductBanner = ({ pseudonym, title, price, currency, image, country, shop
         
         <div className="mt-2">
           <div className="flex justify-between items-center">
-            <span className="text-red-400 font-bold text-sm">€{price}</span>
+            <span className="text-xs text-gray-500">Visit Shop</span>
             <span className="text-xs text-gray-500">Ships from {country}</span>
           </div>
         </div>

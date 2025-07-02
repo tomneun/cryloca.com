@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import Rules from "./pages/Rules";
 import AdminDashboard from "./pages/AdminDashboard";
 import VendorLicense from "./pages/VendorLicense";
 import LicenseThanks from "./pages/LicenseThanks";
+import VendorLogin from "./pages/VendorLogin";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +31,7 @@ const App = () => (
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/vendor-license" element={<VendorLicense />} />
           <Route path="/license-thanks" element={<LicenseThanks />} />
+          <Route path="/vendor-login" element={<VendorLogin />} />
           <Route path="/my-shop" element={<MyShop />} />
           <Route path="/shop/:pseudonym" element={<Shop />} />
           <Route path="/shop/:pseudonym/product/:id" element={<ProductDetail />} />
