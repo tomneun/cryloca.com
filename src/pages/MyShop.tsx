@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff, LogOut } from 'lucide-react';
 import ProductForm from '@/components/ProductForm';
+import VendorBanner from '@/components/VendorBanner';
+
 const MyShop = () => {
   const {
     session,
@@ -36,7 +38,8 @@ const MyShop = () => {
       visibility: !currentVisibility
     });
   };
-  return <div className="min-h-screen bg-gray-900 text-gray-100">
+  return (
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
       <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
@@ -67,6 +70,9 @@ const MyShop = () => {
             Shop-URL: /shop/{session.pseudonym}
           </p>
         </div>
+
+        {/* Vendor Banner Section */}
+        <VendorBanner />
 
         {/* Products Section */}
         <div className="flex items-center justify-between mb-6">
@@ -127,6 +133,8 @@ const MyShop = () => {
       setShowProductForm(false);
       setEditingProduct(null);
     }} />}
-    </div>;
+    </div>
+  );
 };
+
 export default MyShop;

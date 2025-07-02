@@ -51,13 +51,31 @@ const Index = () => {
     navigate('/');
   };
   const publicProducts = getPublicProducts();
-  const productsByVendor = publicProducts.reduce((acc, product) => {
-    if (!acc[product.pseudonym]) {
-      acc[product.pseudonym] = [];
+  
+  // Filter products by vendor banner visibility and invisible mode
+  const visibleVendors = publicProducts.reduce((acc, product) => {
+    const bannerData = localStorage.getItem(`vendor_banner_${product.pseudonym}`);
+    let isVendorVisible = true;
+    
+    if (bannerData) {
+      try {
+        const parsed = JSON.parse(bannerData);
+        isVendorVisible = parsed.isVisible && !parsed.invisibleMode;
+      } catch (error) {
+        console.error('Failed to parse banner data for', product.pseudonym);
+      }
     }
-    acc[product.pseudonym].push(product);
+    
+    if (isVendorVisible) {
+      if (!acc[product.pseudonym]) {
+        acc[product.pseudonym] = [];
+      }
+      acc[product.pseudonym].push(product);
+    }
+    
     return acc;
   }, {} as Record<string, typeof publicProducts>);
+  
   if (!isAuthenticated) {
     return <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center px-4">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">
@@ -100,7 +118,8 @@ const Index = () => {
         <AdminContact />
       </div>;
   }
-  return <div className="min-h-screen bg-gray-900 text-gray-100">
+  return (
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
       <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
@@ -146,23 +165,50 @@ const Index = () => {
         </div>
 
         {/* Vendor Shops Grid */}
-        {Object.keys(productsByVendor).length === 0 ? <div className="text-center py-12">
+        {Object.keys(visibleVendors).length === 0 ? (
+          <div className="text-center py-12">
             <ShoppingBag className="h-16 w-16 text-gray-600 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-400 mb-2">No shops available yet</h3>
             <p className="text-gray-500">Be the first to create a shop!</p>
             <Button onClick={() => navigate('/my-shop')} className="mt-4 bg-red-600 hover:bg-red-700">
               Create Your Shop
             </Button>
-          </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Object.entries(productsByVendor).map(([vendorPseudonym, products]) => {
-          const featuredProduct = products[0];
-          return <ProductBanner key={vendorPseudonym} pseudonym={vendorPseudonym} title={featuredProduct.title} price={featuredProduct.price} currency="EUR" image={featuredProduct.images[0]} country="Germany" // Default - should come from vendor data
-          />;
-        })}
-          </div>}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(visibleVendors).map(([vendorPseudonym, products]) => {
+              const featuredProduct = products[0];
+              const bannerData = localStorage.getItem(`vendor_banner_${vendorPseudonym}`);
+              let customBanner = null;
+              
+              if (bannerData) {
+                try {
+                  const parsed = JSON.parse(bannerData);
+                  customBanner = parsed.bannerImage;
+                } catch (error) {
+                  console.error('Failed to parse banner for', vendorPseudonym);
+                }
+              }
+              
+              return (
+                <ProductBanner
+                  key={vendorPseudonym}
+                  pseudonym={vendorPseudonym}
+                  title={featuredProduct.title}
+                  price={featuredProduct.price}
+                  currency="EUR"
+                  image={customBanner || featuredProduct.images[0]}
+                  country="Germany" // Default - should come from vendor data
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
       
       <AdminContact />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
