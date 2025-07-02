@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/hooks/useSession';
@@ -53,7 +52,7 @@ const Index = () => {
         <AdminContact />
       </div>
     );
-  }
+  };
 
   // Show Buy/Sell choice after CAPTCHA
   if (showChoice && !isAuthenticated) {
@@ -65,7 +64,7 @@ const Index = () => {
         <AdminContact />
       </div>
     );
-  }
+  };
 
   // Show marketplace after "Buy" selection or if authenticated
   const publicProducts = getPublicProducts();
@@ -106,6 +105,17 @@ const Index = () => {
                 <h1 className="text-2xl font-bold">NLC</h1>
               </div>
               {session && <span className="text-gray-400">@{session?.pseudonym}</span>}
+            </div>
+            
+            {/* Centered Marketplace Button */}
+            <div className="absolute left-1/2 transform -translate-x-1/2">
+              <Button 
+                onClick={() => navigate('/')} 
+                className="bg-green-600 hover:bg-green-700 font-semibold"
+              >
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Marketplace
+              </Button>
             </div>
             
             <div className="flex items-center gap-4">
@@ -180,7 +190,7 @@ const Index = () => {
                   price={featuredProduct.price}
                   currency="EUR"
                   image={customBanner || featuredProduct.images[0]}
-                  country="Germany" // Default - should come from vendor data
+                  country="Germany"
                 />
               );
             })}
