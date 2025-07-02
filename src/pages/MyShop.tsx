@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff, LogOut } from 'lucide-react';
 import ProductForm from '@/components/ProductForm';
 import VendorBanner from '@/components/VendorBanner';
-
 const MyShop = () => {
   const {
     session,
@@ -38,8 +37,7 @@ const MyShop = () => {
       visibility: !currentVisibility
     });
   };
-  return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+  return <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
       <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
@@ -49,7 +47,7 @@ const MyShop = () => {
               <h1 className="text-2xl font-bold">No Limit Center: Vendor Area</h1>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={() => navigate('/')} className="border-gray-600 bg-orange-500 hover:bg-orange-400 text-slate-500">
+              <Button variant="outline" onClick={() => navigate('/')} className="border-gray-600 text-slate-500 rounded-md bg-red-700 hover:bg-red-600">
                 Marktplatz
               </Button>
               <Button variant="destructive" onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
@@ -133,8 +131,6 @@ const MyShop = () => {
       setShowProductForm(false);
       setEditingProduct(null);
     }} />}
-    </div>
-  );
+    </div>;
 };
-
 export default MyShop;
