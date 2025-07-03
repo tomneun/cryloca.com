@@ -14,8 +14,8 @@ const BuySellChoice = ({ onBuyClick, onSellClick }: BuySellChoiceProps) => {
         <div className="flex items-center justify-center gap-3 mb-4">
           <ShoppingBag className="h-12 w-12 text-red-500" />
         </div>
-        <h2 className="text-2xl font-bold mb-2">Welcome to NO LIMIT CENTER</h2>
-        <p className="text-gray-400">What would you like to do?</p>
+        <h2 className="text-2xl font-bold mb-2">Willkommen bei NO LIMIT CENTER</h2>
+        <p className="text-gray-400">Was möchten Sie tun?</p>
       </div>
 
       <div className="space-y-4">
@@ -24,7 +24,7 @@ const BuySellChoice = ({ onBuyClick, onSellClick }: BuySellChoiceProps) => {
           className="w-full bg-red-600 hover:bg-red-700 py-4 text-lg"
         >
           <ShoppingBag className="h-6 w-6 mr-3" />
-          I Want to Buy
+          Ich bin ein Käufer
         </Button>
         
         <Button
@@ -33,7 +33,7 @@ const BuySellChoice = ({ onBuyClick, onSellClick }: BuySellChoiceProps) => {
           className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 py-4 text-lg"
         >
           <Store className="h-6 w-6 mr-3" />
-          I Want to Sell
+          Ich bin ein Verkäufer
         </Button>
       </div>
     </div>

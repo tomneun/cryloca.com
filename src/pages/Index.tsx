@@ -114,21 +114,21 @@ const Index = () => {
                 className="bg-green-600 hover:bg-green-700 font-semibold"
               >
                 <ShoppingBag className="h-4 w-4 mr-2" />
-                Marketplace
+                Marktplatz
               </Button>
             </div>
             
             <div className="flex items-center gap-4">
               <Button variant="ghost" onClick={() => navigate('/rules')} className="text-gray-400 hover:text-gray-100">
                 <Shield className="h-4 w-4 mr-2" />
-                Rules
+                Regeln
               </Button>
               
               {session && (
                 <>
                   <Button onClick={() => navigate('/checkout')} className="bg-red-600 hover:bg-red-700 relative">
                     <ShoppingCart className="h-4 w-4 mr-2" />
-                    Cart
+                    Warenkorb
                     {getTotalItems() > 0 && <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                         {getTotalItems()}
                       </span>}
@@ -136,7 +136,7 @@ const Index = () => {
                   
                   <Button onClick={() => navigate('/my-shop')} className="bg-blue-600 hover:bg-blue-700">
                     <Store className="h-4 w-4 mr-2" />
-                    My Shop
+                    Mein Shop
                   </Button>
                 </>
               )}
@@ -148,9 +148,9 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Message */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Anonymous Marketplace</h2>
+          <h2 className="text-4xl font-bold mb-4">Anonymer Marktplatz</h2>
           <p className="text-gray-400 text-lg">
-            Discover unique digital products from verified vendors
+            Entdecken Sie einzigartige digitale Produkte von verifizierten Verkäufern
           </p>
         </div>
 
@@ -158,11 +158,11 @@ const Index = () => {
         {Object.keys(visibleVendors).length === 0 ? (
           <div className="text-center py-12">
             <ShoppingBag className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">No shops available yet</h3>
-            <p className="text-gray-500">Be the first to create a shop!</p>
+            <h3 className="text-xl font-semibold text-gray-400 mb-2">Noch keine Shops verfügbar</h3>
+            <p className="text-gray-500">Seien Sie der Erste, der einen Shop erstellt!</p>
             {session && (
               <Button onClick={() => navigate('/my-shop')} className="mt-4 bg-red-600 hover:bg-red-700">
-                Create Your Shop
+                Erstellen Sie Ihren Shop
               </Button>
             )}
           </div>
