@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff, LogOut } from 'lucide-react';
 import ProductForm from '@/components/ProductForm';
 import VendorBanner from '@/components/VendorBanner';
+import VendorOrders from '@/components/VendorOrders';
 
 const MyShop = () => {
   const {
@@ -62,18 +63,18 @@ const MyShop = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Shop Info with Banner */}
+        {/* Shop Info */}
         <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
           <h2 className="text-2xl font-bold mb-2">Shop: @{session.pseudonym}</h2>
           <p className="text-gray-400">Erstellt am: {new Date(session.createdAt).toLocaleDateString('de-DE')}</p>
           <p className="text-sm text-gray-500 mt-2">
             Shop-URL: /shop/{session.pseudonym}
           </p>
-          
-          {/* Vendor Banner inside the shop info section */}
-          <div className="mt-6 pt-6 border-t border-gray-700">
-            <VendorBanner />
-          </div>
+        </div>
+
+        {/* Vendor Orders - replaces banner section */}
+        <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+          <VendorOrders />
         </div>
 
         {/* Products Section */}

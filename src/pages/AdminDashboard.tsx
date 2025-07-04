@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Settings, Euro, ArrowLeft, Code } from 'lucide-react';
 import VendorCodeManager from '@/components/VendorCodeManager';
 import AdminContact from '@/components/AdminContact';
+import AdminOrders from '@/components/AdminOrders';
+import CryptoWalletManager from '@/components/CryptoWalletManager';
 
 const AdminDashboard = () => {
   const [sessionId, setSessionId] = useState('');
@@ -103,7 +104,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -174,6 +175,12 @@ const AdminDashboard = () => {
             </form>
           </CardContent>
         </Card>
+
+        {/* Crypto Wallet Management */}
+        <CryptoWalletManager />
+
+        {/* Order Management */}
+        <AdminOrders />
 
         {/* Vendor Code Management */}
         <VendorCodeManager />

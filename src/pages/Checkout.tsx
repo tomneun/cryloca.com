@@ -1,22 +1,61 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/hooks/useCart';
+import { useOrders } from '@/hooks/useOrders';
+import { useCryptoWallets } from '@/hooks/useCryptoWallets';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingBag, ArrowLeft, Copy, Check } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { ShoppingBag, ArrowLeft, Copy, Check, Clock } from 'lucide-react';
 
 const Checkout = () => {
   const { cart, getTotalPrice, clearCart } = useCart();
-  const [step, setStep] = useState<'cart' | 'payment' | 'confirm'>('cart');
+  const { addOrder } = useOrders();
+  const { wallets } = useCryptoWallets();
+  const [step, setStep] = useState<'cart' | 'address' | 'payment' | 'confirm'>('cart');
+  const [deliveryAddress, setDeliveryAddress] = useState({
+    name: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    country: ''
+  });
   const [paymentData, setPaymentData] = useState({
     orderId: '',
     paymentAddress: '',
-    totalXMR: 0
+    totalXMR: 0,
+    customerCode: ''
   });
   const [txHash, setTxHash] = useState('');
   const [copied, setCopied] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const navigate = useNavigate();
+
+  // Countdown timer
+  useEffect(() => {
+    if (step === 'payment' && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            // Payment expired
+            alert('Zahlungsfrist abgelaufen. Bitte starten Sie den Bestellvorgang erneut.');
+            navigate('/');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    }
+  }, [step, timeLeft, navigate]);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   if (cart.length === 0 && step === 'cart') {
     return (
@@ -33,67 +72,62 @@ const Checkout = () => {
     );
   }
 
-  const createOrder = async () => {
-    // TODO: Replace with actual API call to backend
-    // POST /api/checkout/create with cart contents
-    try {
-      const response = await fetch('/api/checkout/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ cart })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create order');
-      }
-      
-      const data = await response.json();
-      setPaymentData({
-        orderId: data.orderId,
-        paymentAddress: data.paymentAddress,
-        totalXMR: data.totalXMR
-      });
-      setStep('payment');
-    } catch (error) {
-      console.error('Order creation failed:', error);
-      alert('Fehler beim Erstellen der Bestellung. Bitte versuchen Sie es erneut.');
-    }
+  const proceedToAddress = () => {
+    setStep('address');
   };
 
-  const confirmPayment = async () => {
+  const createOrder = () => {
+    if (!deliveryAddress.name || !deliveryAddress.street || !deliveryAddress.city) {
+      alert('Bitte füllen Sie alle Pflichtfelder aus');
+      return;
+    }
+
+    const customerCode = 'CUST-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    const orderId = 'ORD-' + Date.now();
+    const totalXMR = getTotalPrice();
+    
+    // Use admin wallet address for payment
+    const paymentAddress = wallets.xmrAddress || 'WALLET_NOT_CONFIGURED';
+    
+    const newOrder = addOrder({
+      customerId: 'anonymous',
+      vendorPseudonym: cart[0].sellerPseudonym, // Assuming single vendor for simplicity
+      customerCode,
+      items: cart.map(item => ({
+        productId: item.productId,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      totalAmount: totalXMR,
+      currency: 'XMR',
+      status: 'pending',
+      paymentAddress,
+      deliveryAddress: {
+        ...deliveryAddress,
+        isVisible: false
+      }
+    });
+
+    setPaymentData({
+      orderId,
+      paymentAddress,
+      totalXMR,
+      customerCode
+    });
+    setStep('payment');
+  };
+
+  const confirmPayment = () => {
     if (!txHash.trim()) {
       alert('Bitte geben Sie den Transaction Hash ein');
       return;
     }
     
-    // TODO: Replace with actual API call to backend
-    // POST /api/checkout/confirm with orderId and txHash
-    try {
-      const response = await fetch('/api/checkout/confirm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ 
-          orderId: paymentData.orderId,
-          txHash: txHash.trim()
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Payment confirmation failed');
-      }
-      
-      setStep('confirm');
-      clearCart();
-    } catch (error) {
-      console.error('Payment confirmation failed:', error);
-      alert('Fehler bei der Zahlungsbestätigung. Bitte versuchen Sie es erneut.');
-    }
+    // Simulate payment confirmation (in real app, this would verify on blockchain)
+    setPaymentConfirmed(true);
+    setStep('confirm');
+    clearCart();
   };
 
   const copyToClipboard = (text: string) => {
@@ -110,7 +144,11 @@ const Checkout = () => {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              onClick={() => step === 'cart' ? navigate(-1) : setStep('cart')}
+              onClick={() => {
+                if (step === 'cart') navigate(-1);
+                else if (step === 'address') setStep('cart');
+                else if (step === 'payment') setStep('address');
+              }}
               className="text-gray-400 hover:text-gray-100"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -148,10 +186,67 @@ const Checkout = () => {
               ))}
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="flex justify-between text-xl font-bold">
-                <span>Gesamt:</span>
-                <span className="text-red-400">{getTotalPrice().toFixed(3)} XMR</span>
+            <Button
+              onClick={proceedToAddress}
+              className="w-full bg-red-600 hover:bg-red-700"
+              size="lg"
+            >
+              Zur Lieferadresse
+            </Button>
+          </div>
+        )}
+
+        {step === 'address' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold">Lieferadresse</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name *</Label>
+                <Input
+                  id="name"
+                  value={deliveryAddress.name}
+                  onChange={(e) => setDeliveryAddress(prev => ({ ...prev, name: e.target.value }))}
+                  className="bg-gray-700 border-gray-600 text-gray-100"
+                />
+              </div>
+              <div>
+                <Label htmlFor="street">Straße *</Label>
+                <Input
+                  id="street"
+                  value={deliveryAddress.street}
+                  onChange={(e) => setDeliveryAddress(prev => ({ ...prev, street: e.target.value }))}
+                  className="bg-gray-700 border-gray-600 text-gray-100"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="postalCode">PLZ</Label>
+                  <Input
+                    id="postalCode"
+                    value={deliveryAddress.postalCode}
+                    onChange={(e) => setDeliveryAddress(prev => ({ ...prev, postalCode: e.target.value }))}
+                    className="bg-gray-700 border-gray-600 text-gray-100"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="city">Stadt *</Label>
+                  <Input
+                    id="city"
+                    value={deliveryAddress.city}
+                    onChange={(e) => setDeliveryAddress(prev => ({ ...prev, city: e.target.value }))}
+                    className="bg-gray-700 border-gray-600 text-gray-100"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="country">Land</Label>
+                <Input
+                  id="country"
+                  value={deliveryAddress.country}
+                  onChange={(e) => setDeliveryAddress(prev => ({ ...prev, country: e.target.value }))}
+                  className="bg-gray-700 border-gray-600 text-gray-100"
+                />
               </div>
             </div>
 
@@ -167,7 +262,13 @@ const Checkout = () => {
 
         {step === 'payment' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Monero Zahlung</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">Monero Zahlung</h2>
+              <div className="flex items-center gap-2 text-red-400">
+                <Clock className="h-5 w-5" />
+                <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
+              </div>
+            </div>
             
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h4 className="font-semibold mb-2">Zahlungsdetails</h4>
@@ -199,13 +300,6 @@ const Checkout = () => {
               </div>
             </div>
 
-            <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
-              <p className="text-yellow-300 text-sm">
-                <strong>Wichtig:</strong> Senden Sie genau den angegebenen Betrag an die Adresse. 
-                Nach der Zahlung geben Sie den Transaction Hash unten ein.
-              </p>
-            </div>
-
             <div className="space-y-3">
               <label className="text-gray-300 font-medium">Transaction Hash eingeben:</label>
               <Input
@@ -226,23 +320,34 @@ const Checkout = () => {
           </div>
         )}
 
-        {step === 'confirm' && (
+        {step === 'confirm' && paymentConfirmed && (
           <div className="text-center space-y-6">
             <div className="bg-green-900/20 border border-green-700 rounded-lg p-8">
               <Check className="h-16 w-16 text-green-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-green-400 mb-2">Zahlung eingegangen!</h2>
-              <p className="text-gray-300">
-                Ihre Bestellung wird verarbeitet. Sie erhalten Ihre Downloads nach der Bestätigung.
+              <h2 className="text-2xl font-bold text-green-400 mb-2">Zahlung bestätigt!</h2>
+              <p className="text-gray-300 mb-4">
+                Ihre Coins sind in unserer Wallet eingegangen.
               </p>
-            </div>
-
-            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-left">
-              <h3 className="font-semibold mb-2">Nächste Schritte:</h3>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Warten Sie auf 10+ Netzwerk-Bestätigungen</li>
-                <li>• Download-Links werden dann verfügbar</li>
-                <li>• Links laufen nach 24 Stunden ab</li>
-              </ul>
+              
+              <div className="bg-red-900/20 border border-red-700 rounded-lg p-4 mb-4">
+                <h3 className="font-bold text-red-300 mb-2">Ihr Kunden-Code:</h3>
+                <div className="flex items-center justify-center gap-2">
+                  <code className="text-red-400 font-mono text-xl font-bold">
+                    {paymentData.customerCode}
+                  </code>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(paymentData.customerCode)}
+                    className="border-red-500 text-red-400"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-red-300 text-sm mt-2">
+                  Teilen Sie diesen Code mit dem Verkäufer für Ihre Bestellung
+                </p>
+              </div>
             </div>
 
             <Button
