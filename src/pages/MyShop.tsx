@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/hooks/useSession';
@@ -71,6 +70,14 @@ const MyShop = () => {
     saveBannerData(newData);
   };
 
+  const toggleBannerVisibility = () => {
+    const newData = {
+      ...bannerData,
+      isVisible: !bannerData.isVisible
+    };
+    saveBannerData(newData);
+  };
+
   if (!session) {
     navigate('/');
     return null;
@@ -130,8 +137,28 @@ const MyShop = () => {
                 allowDownload={true} 
                 className="w-full" 
               />
+              <div className="flex items-center gap-2 mt-3">
+                <Button
+                  size="sm"
+                  variant={bannerData.isVisible ? "default" : "outline"}
+                  onClick={toggleBannerVisibility}
+                  className={bannerData.isVisible ? "bg-green-600 hover:bg-green-700" : "border-gray-600 text-gray-300 hover:bg-gray-700"}
+                >
+                  {bannerData.isVisible ? (
+                    <>
+                      <Eye className="h-4 w-4 mr-1" />
+                      Sichtbar
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-4 w-4 mr-1" />
+                      Versteckt
+                    </>
+                  )}
+                </Button>
+              </div>
               <p className="text-gray-400 text-xs mt-2">
-                Ihr Banner wird im Marktplatz angezeigt
+                Ihr Banner wird im Marktplatz angezeigt wenn sichtbar
               </p>
             </div>
           </div>
