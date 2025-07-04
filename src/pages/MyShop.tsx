@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/hooks/useSession';
 import { useProducts } from '@/hooks/useProducts';
@@ -8,15 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff, LogOut } from 'lucide-react';
 import ProductForm from '@/components/ProductForm';
-import ImageUpload from '@/components/ImageUpload';
-import VendorOrders from '@/components/VendorOrders';
-
-interface VendorBannerData {
-  pseudonym: string;
-  bannerImage: string | null;
-  isVisible: boolean;
-  invisibleMode: boolean;
-}
+import VendorBanner from '@/components/VendorBanner';
 
 const MyShop = () => {
   const {
@@ -30,47 +21,7 @@ const MyShop = () => {
   } = useProducts();
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
-  const [bannerData, setBannerData] = useState<VendorBannerData>({
-    pseudonym: session?.pseudonym || '',
-    bannerImage: null,
-    isVisible: true,
-    invisibleMode: false
-  });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (session) {
-      const savedBanner = localStorage.getItem(`vendor_banner_${session.pseudonym}`);
-      if (savedBanner) {
-        try {
-          setBannerData(JSON.parse(savedBanner));
-        } catch (error) {
-          console.error('Failed to parse banner data:', error);
-        }
-      } else {
-        setBannerData(prev => ({
-          ...prev,
-          pseudonym: session.pseudonym
-        }));
-      }
-    }
-  }, [session]);
-
-  const saveBannerData = (newData: VendorBannerData) => {
-    setBannerData(newData);
-    if (session) {
-      localStorage.setItem(`vendor_banner_${session.pseudonym}`, JSON.stringify(newData));
-    }
-  };
-
-  const handleBannerImageChange = (imageUrl: string | null) => {
-    const newData = {
-      ...bannerData,
-      bannerImage: imageUrl
-    };
-    saveBannerData(newData);
-  };
-
   if (!session) {
     navigate('/');
     return null;
@@ -111,35 +62,18 @@ const MyShop = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Shop Info with Banner Upload */}
+        {/* Shop Info with Banner */}
         <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-          <div className="flex items-start justify-between gap-6">
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-2">Shop: @{session.pseudonym}</h2>
-              <p className="text-gray-400">Erstellt am: {new Date(session.createdAt).toLocaleDateString('de-DE')}</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Shop-URL: /shop/{session.pseudonym}
-              </p>
-            </div>
-            <div className="w-64">
-              <Label className="text-gray-300 mb-3 block">Shop Banner</Label>
-              <ImageUpload 
-                currentImage={bannerData.bannerImage} 
-                onImageChange={handleBannerImageChange} 
-                placeholder="Shop Banner hochladen" 
-                allowDownload={true} 
-                className="w-full" 
-              />
-              <p className="text-gray-400 text-xs mt-2">
-                Ihr Banner wird im Marktplatz angezeigt
-              </p>
-            </div>
+          <h2 className="text-2xl font-bold mb-2">Shop: @{session.pseudonym}</h2>
+          <p className="text-gray-400">Erstellt am: {new Date(session.createdAt).toLocaleDateString('de-DE')}</p>
+          <p className="text-sm text-gray-500 mt-2">
+            Shop-URL: /shop/{session.pseudonym}
+          </p>
+          
+          {/* Vendor Banner inside the shop info section */}
+          <div className="mt-6 pt-6 border-t border-gray-700">
+            <VendorBanner />
           </div>
-        </div>
-
-        {/* Vendor Orders */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-          <VendorOrders />
         </div>
 
         {/* Products Section */}
