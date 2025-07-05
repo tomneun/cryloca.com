@@ -5,9 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Settings, Euro, ArrowLeft, Code } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Shield, Settings, Euro, ArrowLeft, Code, Wallet } from 'lucide-react';
 import VendorCodeManager from '@/components/VendorCodeManager';
 import AdminContact from '@/components/AdminContact';
+
+interface VendorData {
+  pseudonym: string;
+  walletAddress: string;
+  lastUpdated: string;
+}
 
 const AdminDashboard = () => {
   const [sessionId, setSessionId] = useState('');
@@ -15,6 +22,7 @@ const AdminDashboard = () => {
   const [licenseFee, setLicenseFee] = useState<number>(500);
   const [newFee, setNewFee] = useState<string>('');
   const [message, setMessage] = useState('');
+  const [vendorData, setVendorData] = useState<VendorData[]>([]);
   const navigate = useNavigate();
 
   const ADMIN_SESSION_ID = '053aa07e41ee40915fcb71fa6f2512cf7156191d3fc1742f5c76ebd4039bcebe4d';
@@ -23,6 +31,16 @@ const AdminDashboard = () => {
     const savedFee = localStorage.getItem('vendor_license_fee');
     if (savedFee) {
       setLicenseFee(parseFloat(savedFee));
+    }
+    
+    // Load vendor data
+    const savedVendorData = localStorage.getItem('admin_vendor_data');
+    if (savedVendorData) {
+      try {
+        setVendorData(JSON.parse(savedVendorData));
+      } catch (error) {
+        console.error('Failed to parse vendor data:', error);
+      }
     }
   }, []);
 
@@ -103,7 +121,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -172,6 +190,44 @@ const AdminDashboard = () => {
                 Update Fee
               </Button>
             </form>
+          </CardContent>
+        </Card>
+
+        {/* Vendor Wallet Addresses */}
+        <Card className="bg-gray-800 border-gray-700 mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Wallet className="h-6 w-6 text-yellow-400" />
+              Vendor Wallet Addresses
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {vendorData.length === 0 ? (
+              <p className="text-gray-400">No vendor wallet addresses configured yet.</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-gray-700">
+                    <TableHead className="text-gray-300">Vendor</TableHead>
+                    <TableHead className="text-gray-300">Wallet Address</TableHead>
+                    <TableHead className="text-gray-300">Last Updated</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {vendorData.map((vendor) => (
+                    <TableRow key={vendor.pseudonym} className="border-gray-700">
+                      <TableCell className="text-gray-100">@{vendor.pseudonym}</TableCell>
+                      <TableCell className="text-gray-100 font-mono text-sm">
+                        {vendor.walletAddress}
+                      </TableCell>
+                      <TableCell className="text-gray-400">
+                        {new Date(vendor.lastUpdated).toLocaleString('de-DE')}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
 
