@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/hooks/useSession';
 import { useProducts } from '@/hooks/useProducts';
@@ -33,7 +32,7 @@ const MyShop = () => {
   const myProducts = products.filter(p => p.pseudonym === session.pseudonym);
 
   // Load current wallet address and session ID
-  useState(() => {
+  useEffect(() => {
     const savedWallet = localStorage.getItem(`wallet_${session.pseudonym}`);
     const savedSession = localStorage.getItem(`custom_session_${session.pseudonym}`);
     if (savedWallet) setCurrentWalletAddress(savedWallet);
