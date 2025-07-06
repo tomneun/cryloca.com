@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useSession } from '@/hooks/useSession';
 import { useProducts } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { ShoppingBag, Plus, Edit, Trash2, Eye, EyeOff, Power, PowerOff } from 'lucide-react';
 import ProductForm from '@/components/ProductForm';
 
 const ProductsTab = () => {
@@ -20,10 +20,21 @@ const ProductsTab = () => {
     updateProduct(productId, { visibility: !currentVisibility });
   };
 
+  const toggleActive = (productId: string, currentStock: number) => {
+    // Toggle between 0 and 1 for temporary activation/deactivation
+    updateProduct(productId, { stock: currentStock > 0 ? 0 : 1 });
+  };
+
+  const deleteProductWithConfirm = (productId: string, productTitle: string) => {
+    if (confirm(`Produkt "${productTitle}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`)) {
+      deleteProduct(productId);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold">Meine Produkte ({myProducts.length})</h3>
+        <h3 className="text-xl font-semibold">Produkt Management ({myProducts.length})</h3>
         <Button onClick={() => setShowProductForm(true)} className="bg-red-600 hover:bg-red-700">
           <Plus className="h-4 w-4 mr-2" />
           Produkt hinzufügen
@@ -45,8 +56,21 @@ const ProductsTab = () => {
             <div key={product.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700">
               <div className="aspect-video bg-gray-700 relative">
                 <img src={product.images[0] || '/placeholder.svg'} alt={product.title} className="w-full h-full object-cover" />
-                <div className="absolute top-2 right-2">
-                  <Button size="sm" variant="secondary" onClick={() => toggleVisibility(product.id, product.visibility)} className="bg-gray-900/80 hover:bg-gray-900">
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <Button 
+                    size="sm" 
+                    variant="secondary" 
+                    onClick={() => toggleActive(product.id, product.stock)} 
+                    className={`${product.stock > 0 ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 hover:bg-gray-700'}`}
+                  >
+                    {product.stock > 0 ? <Power className="h-4 w-4" /> : <PowerOff className="h-4 w-4" />}
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="secondary" 
+                    onClick={() => toggleVisibility(product.id, product.visibility)} 
+                    className="bg-gray-900/80 hover:bg-gray-900"
+                  >
                     {product.visibility ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -56,7 +80,12 @@ const ProductsTab = () => {
                 <p className="text-gray-400 text-sm mb-3 line-clamp-2">{product.description}</p>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-red-400 font-bold">{product.price} {product.currency}</span>
-                  <span className="text-sm text-gray-500">Lager: {product.stock}</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs px-2 py-1 rounded ${product.stock > 0 ? 'bg-green-600' : 'bg-red-600'}`}>
+                      {product.stock > 0 ? 'Aktiv' : 'Inaktiv'}
+                    </span>
+                    <span className="text-sm text-gray-500">Lager: {product.stock}</span>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => {
@@ -66,11 +95,12 @@ const ProductsTab = () => {
                     <Edit className="h-4 w-4 mr-1" />
                     Bearbeiten
                   </Button>
-                  <Button size="sm" variant="destructive" onClick={() => {
-                    if (confirm('Produkt wirklich löschen?')) {
-                      deleteProduct(product.id);
-                    }
-                  }} className="bg-red-600 hover:bg-red-700">
+                  <Button 
+                    size="sm" 
+                    variant="destructive" 
+                    onClick={() => deleteProductWithConfirm(product.id, product.title)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

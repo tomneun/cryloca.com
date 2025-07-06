@@ -13,26 +13,34 @@ const VendorGrid = ({ visibleVendors }: VendorGridProps) => {
         const featuredProduct = products[0];
         const bannerData = localStorage.getItem(`vendor_banner_${vendorPseudonym}`);
         let customBanner = null;
+        let shopName = '';
         
         if (bannerData) {
           try {
             const parsed = JSON.parse(bannerData);
             customBanner = parsed.bannerImage;
+            shopName = parsed.shopName || '';
           } catch (error) {
             console.error('Failed to parse banner for', vendorPseudonym);
           }
         }
         
         return (
-          <ProductBanner
-            key={vendorPseudonym}
-            pseudonym={vendorPseudonym}
-            title={featuredProduct.title}
-            price={featuredProduct.price}
-            currency="EUR"
-            image={customBanner || featuredProduct.images[0]}
-            country="Germany"
-          />
+          <div key={vendorPseudonym} className="space-y-2">
+            <ProductBanner
+              pseudonym={vendorPseudonym}
+              title={featuredProduct.title}
+              price={featuredProduct.price}
+              currency="EUR"
+              image={customBanner || featuredProduct.images[0]}
+              country="Germany"
+            />
+            {shopName && (
+              <p className="text-center text-gray-300 font-semibold text-sm">
+                {shopName}
+              </p>
+            )}
+          </div>
         );
       })}
     </div>

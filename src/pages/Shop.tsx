@@ -17,6 +17,18 @@ const Shop = () => {
   }
 
   const products = getProductsByPseudonym(pseudonym);
+  
+  // Get shop name
+  const bannerData = localStorage.getItem(`vendor_banner_${pseudonym}`);
+  let shopName = '';
+  if (bannerData) {
+    try {
+      const parsed = JSON.parse(bannerData);
+      shopName = parsed.shopName || '';
+    } catch (error) {
+      console.error('Failed to parse banner data:', error);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -35,7 +47,12 @@ const Shop = () => {
               </Button>
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-6 w-6 text-red-500" />
-                <h1 className="text-xl font-bold">@{pseudonym}</h1>
+                <div>
+                  <h1 className="text-xl font-bold">@{pseudonym}</h1>
+                  {shopName && (
+                    <p className="text-sm text-gray-400">{shopName}</p>
+                  )}
+                </div>
               </div>
             </div>
             <Button
@@ -56,7 +73,9 @@ const Shop = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Shop von @{pseudonym}</h2>
+          <h2 className="text-3xl font-bold mb-2">
+            {shopName ? shopName : `Shop von @${pseudonym}`}
+          </h2>
           <p className="text-gray-400">{products.length} Produkte verfügbar</p>
         </div>
 

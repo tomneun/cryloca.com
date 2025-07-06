@@ -24,16 +24,29 @@ const VendorHeader = () => {
             <h1 className="text-2xl font-bold">No Limit Center: Vendor Area</h1>
           </div>
           <div className="flex flex-col gap-2">
-            <Button variant="outline" onClick={() => navigate('/')} className="border-gray-600 text-white rounded-md bg-red-700 hover:bg-red-600">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/')} 
+              className="border-2 border-cyan-400 text-white bg-red-700 hover:bg-red-600 hover:border-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.6)] transition-all duration-300 neon-glow"
+            >
               Marktplatz
             </Button>
-            <Button variant="destructive" onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
+            <Button 
+              variant="destructive" 
+              onClick={handleLogout} 
+              className="border-2 border-red-400 bg-red-600 hover:bg-red-700 hover:border-red-300 hover:shadow-[0_0_15px_rgba(248,113,113,0.6)] transition-all duration-300"
+            >
               <LogOut className="h-4 w-4 mr-2" />
               Shop löschen
             </Button>
           </div>
         </div>
       </div>
+      <style jsx>{`
+        .neon-glow {
+          box-shadow: 0 0 5px rgba(34, 211, 238, 0.3);
+        }
+      `}</style>
     </header>
   );
 };
