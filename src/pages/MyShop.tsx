@@ -7,6 +7,7 @@ import ShopTab from '@/components/vendor/ShopTab';
 import ProductsTab from '@/components/vendor/ProductsTab';
 import OrdersTab from '@/components/vendor/OrdersTab';
 import ConfigurationTab from '@/components/vendor/ConfigurationTab';
+import SessionBotTab from '@/components/vendor/SessionBotTab';
 import VendorBanner from '@/components/VendorBanner';
 
 const MyShop = () => {
@@ -24,11 +25,12 @@ const MyShop = () => {
 
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="shop" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-800 mb-8">
+          <TabsList className="grid w-full grid-cols-6 bg-gray-800 mb-8">
             <TabsTrigger value="shop">Shop</TabsTrigger>
             <TabsTrigger value="banner">Banner</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="bot">Session Bot</TabsTrigger>
             <TabsTrigger value="configuration">Configuration</TabsTrigger>
           </TabsList>
 
@@ -46,6 +48,10 @@ const MyShop = () => {
 
           <TabsContent value="orders">
             <OrdersTab />
+          </TabsContent>
+
+          <TabsContent value="bot">
+            <SessionBotTab />
           </TabsContent>
 
           <TabsContent value="configuration">
