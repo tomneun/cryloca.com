@@ -1,12 +1,12 @@
 
 import WalletConfiguration from './WalletConfiguration';
-import SessionConfiguration from './SessionConfiguration';
+import SecureSessionConfiguration from './SecureSessionConfiguration';
 
 const ConfigurationTab = () => {
   return (
     <div className="space-y-8">
       <WalletConfiguration />
-      <SessionConfiguration />
+      <SecureSessionConfiguration />
     </div>
   );
 };
