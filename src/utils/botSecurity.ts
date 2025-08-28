@@ -11,6 +11,14 @@ export class BotSecurity {
   }
 
   static generateHardenedBotScript(sessionId: string, shopName: string, enableTor: boolean = true): string {
+    // Generate hash using JavaScript crypto
+    const sessionHash = crypto.subtle.digest('SHA-256', new TextEncoder().encode(sessionId))
+      .then(hashBuffer => Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0')).join(''));
+    
+    // For immediate use, create a simple hash
+    const simpleHash = btoa(sessionId).replace(/[^a-zA-Z0-9]/g, '').slice(0, 64);
+    
     return `#!/usr/bin/env python3
 # LoveAble Hardened Session Bot - ${shopName}
 # Security Level: Maximum
@@ -29,7 +37,7 @@ from cryptography.fernet import Fernet
 
 # Sicherheitskonfiguration
 class SecurityConfig:
-    SESSION_ID_HASH = "${hashlib.sha256(sessionId.encode()).hexdigest()}"
+    SESSION_ID_HASH = "${simpleHash}"
     SHOP_NAME = "${shopName}"
     ORDER_DIR = Path("/tmp/loveable_orders_secure")
     MEMORY_ONLY = True
