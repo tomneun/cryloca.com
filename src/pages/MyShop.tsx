@@ -7,7 +7,7 @@ import ShopTab from '@/components/vendor/ShopTab';
 import ProductsTab from '@/components/vendor/ProductsTab';
 import OrdersTab from '@/components/vendor/OrdersTab';
 import ConfigurationTab from '@/components/vendor/ConfigurationTab';
-import SessionBotTab from '@/components/vendor/SessionBotTab';
+import TelegramBotTab from '@/components/vendor/TelegramBotTab';
 import VendorBanner from '@/components/VendorBanner';
 
 const MyShop = () => {
@@ -30,7 +30,7 @@ const MyShop = () => {
             <TabsTrigger value="banner">Banner</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
-            <TabsTrigger value="bot">Session Bot</TabsTrigger>
+            <TabsTrigger value="bot">Telegram Bot</TabsTrigger>
             <TabsTrigger value="configuration">Configuration</TabsTrigger>
           </TabsList>
 
@@ -51,7 +51,7 @@ const MyShop = () => {
           </TabsContent>
 
           <TabsContent value="bot">
-            <SessionBotTab />
+            <TelegramBotTab />
           </TabsContent>
 
           <TabsContent value="configuration">

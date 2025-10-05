@@ -15,7 +15,7 @@ import Rules from "./pages/Rules";
 import AdminDashboard from "./pages/AdminDashboard";
 import VendorLicense from "./pages/VendorLicense";
 import LicenseThanks from "./pages/LicenseThanks";
-import VendorLogin from "./pages/VendorLogin";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +31,7 @@ const App = () => (
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/vendor-license" element={<VendorLicense />} />
           <Route path="/license-thanks" element={<LicenseThanks />} />
-          <Route path="/vendor-login" element={<VendorLogin />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/my-shop" element={<MyShop />} />
           <Route path="/shop/:pseudonym" element={<Shop />} />
           <Route path="/shop/:pseudonym/product/:id" element={<ProductDetail />} />

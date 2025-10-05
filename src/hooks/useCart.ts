@@ -63,6 +63,20 @@ export const useCart = () => {
     localStorage.setItem('anonshop_cart', JSON.stringify(newCart));
   };
 
+  const decreaseQuantity = (productId: string) => {
+    const item = cart.find(i => i.productId === productId);
+    if (item) {
+      updateQuantity(productId, item.quantity - 1);
+    }
+  };
+
+  const increaseQuantity = (productId: string) => {
+    const item = cart.find(i => i.productId === productId);
+    if (item) {
+      updateQuantity(productId, item.quantity + 1);
+    }
+  };
+
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem('anonshop_cart');
@@ -81,6 +95,8 @@ export const useCart = () => {
     addToCart,
     removeFromCart,
     updateQuantity,
+    decreaseQuantity,
+    increaseQuantity,
     clearCart,
     getTotalPrice,
     getTotalItems
