@@ -3,11 +3,10 @@ import { Button } from '@/components/ui/button';
 import { ShoppingBag, Store } from 'lucide-react';
 
 interface BuySellChoiceProps {
-  onBuyClick: () => void;
-  onSellClick: () => void;
+  onChoice: (choice: 'buyer' | 'seller') => void;
 }
 
-const BuySellChoice = ({ onBuyClick, onSellClick }: BuySellChoiceProps) => {
+const BuySellChoice = ({ onChoice }: BuySellChoiceProps) => {
   return (
     <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 max-w-md mx-auto">
       <div className="text-center mb-8">
@@ -20,7 +19,7 @@ const BuySellChoice = ({ onBuyClick, onSellClick }: BuySellChoiceProps) => {
 
       <div className="space-y-4">
         <Button
-          onClick={onBuyClick}
+          onClick={() => onChoice('buyer')}
           className="w-full bg-red-600 hover:bg-red-700 py-4 text-lg"
         >
           <ShoppingBag className="h-6 w-6 mr-3" />
@@ -28,7 +27,7 @@ const BuySellChoice = ({ onBuyClick, onSellClick }: BuySellChoiceProps) => {
         </Button>
         
         <Button
-          onClick={onSellClick}
+          onClick={() => onChoice('seller')}
           variant="outline"
           className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 py-4 text-lg"
         >

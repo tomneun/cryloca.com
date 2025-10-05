@@ -5,6 +5,7 @@ interface CryptoRates {
   btc: number;
   eth: number;
   xmr: number;
+  ltc: number;
   usdt: number;
 }
 
@@ -13,6 +14,7 @@ export const useCryptoRates = () => {
     btc: 45000,
     eth: 2800,
     xmr: 180,
+    ltc: 85,
     usdt: 1
   });
 
@@ -22,6 +24,7 @@ export const useCryptoRates = () => {
       btc: 45000 + Math.random() * 1000,
       eth: 2800 + Math.random() * 200,
       xmr: 180 + Math.random() * 20,
+      ltc: 85 + Math.random() * 10,
       usdt: 1
     };
     setRates(mockRates);

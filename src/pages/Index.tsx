@@ -57,10 +57,18 @@ const Index = () => {
 
   // Show Buy/Sell choice after CAPTCHA
   if (showChoice && !isAuthenticated) {
+    const handleChoice = (choice: 'buyer' | 'seller') => {
+      if (choice === 'buyer') {
+        handleBuyClick();
+      } else {
+        handleSellClick();
+      }
+    };
+
     return (
       <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center px-4">
         <div className="text-center">
-          <BuySellChoice onBuyClick={handleBuyClick} onSellClick={handleSellClick} />
+          <BuySellChoice onChoice={handleChoice} />
         </div>
         <AdminContact />
       </div>
