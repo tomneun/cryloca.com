@@ -10,6 +10,7 @@ import { Shield, Settings, Euro, ArrowLeft, Store, MessageSquare, Wallet, Bot } 
 import { Textarea } from '@/components/ui/textarea';
 import VendorCodeManager from '@/components/VendorCodeManager';
 import AdminContact from '@/components/AdminContact';
+import DesignTab from '@/components/admin/DesignTab';
 import { toast } from 'sonner';
 
 interface VendorLicense {
@@ -534,65 +535,7 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="design">
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-6 w-6 text-pink-400" />
-                  Design & Branding
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Marke</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="siteName" className="text-gray-300">Website-Name</Label>
-                      <Input
-                        id="siteName"
-                        defaultValue="Cryloca: No Limit Center"
-                        className="bg-gray-700 border-gray-600 text-gray-100"
-                        disabled
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Aktuell fest im Code definiert</p>
-                    </div>
-                    <div>
-                      <Label htmlFor="slogan" className="text-gray-300">Slogan</Label>
-                      <Input
-                        id="slogan"
-                        defaultValue="Best Stuff Only Crypto Can Buy"
-                        className="bg-gray-700 border-gray-600 text-gray-100"
-                        disabled
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Aktuell fest im Code definiert</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Passwörter</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="adminPassword" className="text-gray-300">Admin-Passwort</Label>
-                      <Input
-                        id="adminPassword"
-                        type="password"
-                        defaultValue="Tz08154711"
-                        className="bg-gray-700 border-gray-600 text-gray-100"
-                        disabled
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Aktuell fest im Code definiert. Kontaktieren Sie einen Entwickler für Änderungen.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
-                  <p className="text-sm text-yellow-300">
-                    <strong>Hinweis:</strong> Design-Anpassungen wie Logo, Farben und Hintergrundbilder erfordern 
-                    Code-Änderungen. Wenden Sie sich an einen Entwickler, um diese Einstellungen zu ändern.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <DesignTab />
           </TabsContent>
         </Tabs>
       </div>

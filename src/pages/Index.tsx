@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useSession } from '@/hooks/useSession';
 import { useProducts } from '@/hooks/useProducts';
 import { useVisibleVendors } from '@/hooks/useVisibleVendors';
+import { useDesign } from '@/hooks/useDesign';
 import AdminContact from '@/components/AdminContact';
 import MarketplaceHeader from '@/components/MarketplaceHeader';
 import WelcomeSection from '@/components/WelcomeSection';
@@ -11,6 +12,7 @@ import VendorGrid from '@/components/VendorGrid';
 const Index = () => {
   const { session } = useSession();
   const { getPublicProducts } = useProducts();
+  const { settings } = useDesign();
 
   useEffect(() => {
     document.title = 'Cryloca: No Limit Center';
@@ -20,7 +22,15 @@ const Index = () => {
   const visibleVendors = useVisibleVendors(publicProducts);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div 
+      className="min-h-screen bg-gray-900 text-gray-100"
+      style={settings.background ? {
+        backgroundImage: `url(${settings.background})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      } : undefined}
+    >
       <MarketplaceHeader session={session} />
 
       <div className="container mx-auto px-4 py-6">

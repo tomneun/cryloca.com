@@ -1,7 +1,7 @@
 
-# AnonShop - Anonymous Tor Marketplace
+# Cryloca.com - No Limit Center
 
-A decentralized anonymous marketplace for digital goods running on Tor Hidden Services.
+Best Stuff Only Crypto Can Buy - A decentralized anonymous marketplace for digital goods.
 
 ## Features
 

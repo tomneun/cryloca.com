@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ShoppingBag, Store, Shield, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { UserSession } from '@/hooks/useSession';
+import { useDesign } from '@/hooks/useDesign';
+import logo from '@/assets/logo.png';
 
 interface MarketplaceHeaderProps {
   session: UserSession | null;
@@ -12,6 +14,7 @@ interface MarketplaceHeaderProps {
 const MarketplaceHeader = ({ session }: MarketplaceHeaderProps) => {
   const navigate = useNavigate();
   const { getTotalItems } = useCart();
+  const { settings } = useDesign();
 
   return (
     <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur">
@@ -19,7 +22,14 @@ const MarketplaceHeader = ({ session }: MarketplaceHeaderProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="h-8 w-8 text-orange-500" />
+              <img 
+                src={settings.logo || logo} 
+                alt="Cryloca Logo" 
+                className="h-10 w-auto"
+                onError={(e) => {
+                  e.currentTarget.src = logo;
+                }}
+              />
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Cryloca</h1>
                 <p className="text-xs text-gray-400">No Limit Center</p>
