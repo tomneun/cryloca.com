@@ -1,9 +1,14 @@
 
 const WelcomeSection = () => {
   return (
-    <div className="text-center mb-12">
-      <h2 className="text-4xl font-bold mb-4">Anonymer Marktplatz</h2>
-      <p className="text-gray-400 text-lg">
+    <div className="text-center mb-8">
+      <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 bg-clip-text text-transparent">
+        Cryloca: No Limit Center
+      </h1>
+      <p className="text-xl text-gray-300 font-semibold mb-2">
+        Best Stuff Only Crypto Can Buy
+      </p>
+      <p className="text-gray-400">
         Entdecken Sie einzigartige digitale Produkte von verifizierten Verkäufern
       </p>
     </div>

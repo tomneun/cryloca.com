@@ -13,7 +13,7 @@ const Index = () => {
   const { getPublicProducts } = useProducts();
 
   useEffect(() => {
-    document.title = 'NO LIMIT CENTER';
+    document.title = 'Cryloca: No Limit Center';
   }, []);
 
   const publicProducts = getPublicProducts();
@@ -23,7 +23,7 @@ const Index = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <MarketplaceHeader session={session} />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         <WelcomeSection />
 
         {Object.keys(visibleVendors).length === 0 ? (

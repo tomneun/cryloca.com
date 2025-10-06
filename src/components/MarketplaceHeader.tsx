@@ -19,8 +19,11 @@ const MarketplaceHeader = ({ session }: MarketplaceHeaderProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="h-8 w-8 text-red-500" />
-              <h1 className="text-2xl font-bold">NLC</h1>
+              <ShoppingBag className="h-8 w-8 text-orange-500" />
+              <div>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Cryloca</h1>
+                <p className="text-xs text-gray-400">No Limit Center</p>
+              </div>
             </div>
             {session && <span className="text-gray-400">@{session?.pseudonym}</span>}
           </div>

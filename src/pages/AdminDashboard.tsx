@@ -213,12 +213,15 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="settings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-800">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-gray-800">
             <TabsTrigger value="settings">Einstellungen</TabsTrigger>
             <TabsTrigger value="vendors">Verkäufer</TabsTrigger>
+            <TabsTrigger value="shops">Shops</TabsTrigger>
+            <TabsTrigger value="orders">Bestellungen</TabsTrigger>
             <TabsTrigger value="wallets">Wallets</TabsTrigger>
             <TabsTrigger value="messages">Nachrichten</TabsTrigger>
             <TabsTrigger value="codes">Codes</TabsTrigger>
+            <TabsTrigger value="design">Design</TabsTrigger>
           </TabsList>
 
           <TabsContent value="settings">
@@ -434,6 +437,162 @@ const AdminDashboard = () => {
 
           <TabsContent value="codes">
             <VendorCodeManager />
+          </TabsContent>
+
+          <TabsContent value="shops">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Store className="h-6 w-6 text-blue-400" />
+                  Alle Shops & Produkte
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {(() => {
+                  const allProducts: any[] = [];
+                  vendors.forEach(vendor => {
+                    const products = JSON.parse(localStorage.getItem(`products_${vendor.username}`) || '[]');
+                    products.forEach((p: any) => {
+                      allProducts.push({ ...p, vendor: vendor.username });
+                    });
+                  });
+
+                  if (allProducts.length === 0) {
+                    return <p className="text-gray-400">Keine Produkte vorhanden</p>;
+                  }
+
+                  return (
+                    <div className="space-y-4">
+                      {allProducts.map((product) => (
+                        <div key={product.id} className="bg-gray-700 rounded-lg p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold text-gray-100">{product.title}</h3>
+                              <p className="text-sm text-gray-400">Verkäufer: @{product.vendor}</p>
+                              <p className="text-sm text-gray-400">Kategorie: {product.category}</p>
+                              <p className="text-sm text-gray-300 mt-2">{product.description}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-green-400">{product.price} EUR</p>
+                              <p className="text-sm text-gray-400">Lager: {product.stock}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="orders">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Store className="h-6 w-6 text-purple-400" />
+                  Alle Bestellungen
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {(() => {
+                  const allOrders: any[] = [];
+                  vendors.forEach(vendor => {
+                    const orders = JSON.parse(localStorage.getItem(`orders_${vendor.username}`) || '[]');
+                    orders.forEach((o: any) => {
+                      allOrders.push({ ...o, vendor: vendor.username });
+                    });
+                  });
+
+                  if (allOrders.length === 0) {
+                    return <p className="text-gray-400">Keine Bestellungen vorhanden</p>;
+                  }
+
+                  return (
+                    <div className="space-y-4">
+                      {allOrders.map((order) => (
+                        <div key={order.id} className="bg-gray-700 rounded-lg p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="text-lg font-bold text-gray-100">{order.productTitle}</h3>
+                              <p className="text-sm text-gray-400">Verkäufer: @{order.vendor}</p>
+                              <p className="text-sm text-gray-400">Käufer: {order.buyerContact}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-green-400">{order.totalPrice} {order.currency}</p>
+                              <p className="text-sm text-gray-400">Menge: {order.quantity}</p>
+                            </div>
+                          </div>
+                          <p className="text-xs text-gray-500">Bestellt: {new Date(order.createdAt).toLocaleString('de-DE')}</p>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="design">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-6 w-6 text-pink-400" />
+                  Design & Branding
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Marke</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="siteName" className="text-gray-300">Website-Name</Label>
+                      <Input
+                        id="siteName"
+                        defaultValue="Cryloca: No Limit Center"
+                        className="bg-gray-700 border-gray-600 text-gray-100"
+                        disabled
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Aktuell fest im Code definiert</p>
+                    </div>
+                    <div>
+                      <Label htmlFor="slogan" className="text-gray-300">Slogan</Label>
+                      <Input
+                        id="slogan"
+                        defaultValue="Best Stuff Only Crypto Can Buy"
+                        className="bg-gray-700 border-gray-600 text-gray-100"
+                        disabled
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Aktuell fest im Code definiert</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Passwörter</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="adminPassword" className="text-gray-300">Admin-Passwort</Label>
+                      <Input
+                        id="adminPassword"
+                        type="password"
+                        defaultValue="Tz08154711"
+                        className="bg-gray-700 border-gray-600 text-gray-100"
+                        disabled
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Aktuell fest im Code definiert. Kontaktieren Sie einen Entwickler für Änderungen.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
+                  <p className="text-sm text-yellow-300">
+                    <strong>Hinweis:</strong> Design-Anpassungen wie Logo, Farben und Hintergrundbilder erfordern 
+                    Code-Änderungen. Wenden Sie sich an einen Entwickler, um diese Einstellungen zu ändern.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
