@@ -19,15 +19,29 @@ export const useCryptoRates = () => {
   });
 
   useEffect(() => {
-    // Mock crypto rates - in real app, fetch from API
-    const mockRates = {
-      btc: 45000 + Math.random() * 1000,
-      eth: 2800 + Math.random() * 200,
-      xmr: 180 + Math.random() * 20,
-      ltc: 85 + Math.random() * 10,
-      usdt: 1
+    const fetchRates = async () => {
+      try {
+        const response = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,monero,litecoin,tether&vs_currencies=eur'
+        );
+        const data = await response.json();
+        
+        setRates({
+          btc: data.bitcoin?.eur || 45000,
+          eth: data.ethereum?.eur || 2800,
+          xmr: data.monero?.eur || 180,
+          ltc: data.litecoin?.eur || 85,
+          usdt: data.tether?.eur || 1
+        });
+      } catch (error) {
+        console.error('Failed to fetch crypto rates:', error);
+      }
     };
-    setRates(mockRates);
+
+    fetchRates();
+    const interval = setInterval(fetchRates, 60000); // Update every minute
+
+    return () => clearInterval(interval);
   }, []);
 
   const convertEurToCrypto = (eurAmount: number, crypto: keyof CryptoRates) => {

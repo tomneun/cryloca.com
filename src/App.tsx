@@ -18,6 +18,7 @@ import LicenseThanks from "./pages/LicenseThanks";
 import Login from "./pages/Login";
 import ChooseRole from "./pages/ChooseRole";
 import VendorLogin from "./pages/VendorLogin";
+import Info from "./pages/Info";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/rules" element={<Rules />} />
+          <Route path="/info" element={<Info />} />
           <Route path="/xep624" element={<AdminDashboard />} />
           <Route path="/vendor-license" element={<VendorLicense />} />
           <Route path="/license-thanks" element={<LicenseThanks />} />

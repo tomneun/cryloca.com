@@ -21,7 +21,7 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
     title: '',
     description: '',
     price: '',
-    currency: 'XMR',
+    currency: 'EUR',
     stock: '',
     category: '',
     visibility: true
@@ -153,15 +153,13 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
 
                 <div>
                   <Label htmlFor="currency" className="text-gray-300">Währung</Label>
-                  <select
+                  <Input
                     id="currency"
-                    value={formData.currency}
-                    onChange={(e) => setFormData({...formData, currency: e.target.value})}
-                    className="mt-1 w-full h-10 px-3 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:border-red-500 focus:outline-none"
-                  >
-                    <option value="XMR">XMR</option>
-                    <option value="TOKEN">TOKEN</option>
-                  </select>
+                    value="EUR"
+                    disabled
+                    className="mt-1 bg-gray-700 border-gray-600 text-gray-100"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Prices are shown in EUR</p>
                 </div>
               </div>
             </div>

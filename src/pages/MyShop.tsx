@@ -9,6 +9,7 @@ import OrdersTab from '@/components/vendor/OrdersTab';
 import ConfigurationTab from '@/components/vendor/ConfigurationTab';
 import TelegramBotTab from '@/components/vendor/TelegramBotTab';
 import VendorBanner from '@/components/VendorBanner';
+import MessagesTab from '@/components/vendor/MessagesTab';
 
 const MyShop = () => {
   const { session } = useSession();
@@ -25,10 +26,11 @@ const MyShop = () => {
 
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="shop" className="w-full">
-          <TabsList className="grid w-full grid-cols-6 bg-gray-800 mb-8">
+          <TabsList className="grid w-full grid-cols-7 bg-gray-800 mb-8">
             <TabsTrigger value="shop">Shop</TabsTrigger>
             <TabsTrigger value="banner">Banner</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="bot">Telegram Bot</TabsTrigger>
             <TabsTrigger value="configuration">Configuration</TabsTrigger>
@@ -44,6 +46,10 @@ const MyShop = () => {
 
           <TabsContent value="products">
             <ProductsTab />
+          </TabsContent>
+
+          <TabsContent value="messages">
+            <MessagesTab />
           </TabsContent>
 
           <TabsContent value="orders">

@@ -1,7 +1,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Store, Shield, ShoppingCart } from 'lucide-react';
+import { ShoppingBag, Store, Shield, ShoppingCart, LogOut, Info } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { UserSession } from '@/hooks/useSession';
 import { useDesign } from '@/hooks/useDesign';
@@ -24,14 +24,14 @@ const MarketplaceHeader = ({ session }: MarketplaceHeaderProps) => {
             <div className="flex items-center gap-2">
               <img 
                 src={settings.logo || logo} 
-                alt="Cryloca Logo" 
+                alt="Cryloca.com Logo" 
                 className="h-10 w-auto"
                 onError={(e) => {
                   e.currentTarget.src = logo;
                 }}
               />
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Cryloca</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Cryloca.com</h1>
                 <p className="text-xs text-gray-400">No Limit Center</p>
               </div>
             </div>
@@ -50,6 +50,11 @@ const MarketplaceHeader = ({ session }: MarketplaceHeaderProps) => {
           </div>
           
           <div className="flex items-center gap-4">
+            <Button variant="ghost" onClick={() => navigate('/info')} className="text-gray-400 hover:text-gray-100">
+              <Info className="h-4 w-4 mr-2" />
+              Info
+            </Button>
+            
             <Button variant="ghost" onClick={() => navigate('/rules')} className="text-gray-400 hover:text-gray-100">
               <Shield className="h-4 w-4 mr-2" />
               Regeln
@@ -68,6 +73,10 @@ const MarketplaceHeader = ({ session }: MarketplaceHeaderProps) => {
                 <Button onClick={() => navigate('/my-shop')} className="bg-blue-600 hover:bg-blue-700">
                   <Store className="h-4 w-4 mr-2" />
                   Mein Shop
+                </Button>
+                
+                <Button variant="ghost" onClick={() => navigate('/login')} className="text-gray-400 hover:text-gray-100">
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </>
             )}

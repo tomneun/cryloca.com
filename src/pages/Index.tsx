@@ -15,7 +15,7 @@ const Index = () => {
   const { settings } = useDesign();
 
   useEffect(() => {
-    document.title = 'Cryloca: No Limit Center';
+    document.title = 'Cryloca.com: No Limit Center';
   }, []);
 
   const publicProducts = getPublicProducts();

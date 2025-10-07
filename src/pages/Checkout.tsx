@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowLeft, Minus, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, Trash2, LogOut } from 'lucide-react';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -120,14 +120,23 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-900 p-4">
       <div className="container mx-auto max-w-4xl">
-        <Button
-          variant="ghost"
-          onClick={() => step === 'cart' ? navigate('/') : setStep('cart')}
-          className="mb-6 text-gray-400"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => step === 'cart' ? navigate('/') : setStep('cart')}
+            className="text-gray-400"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/login')}
+            className="text-gray-400 hover:text-gray-100"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
 
         {step === 'cart' && (
           <Card className="bg-gray-800 border-gray-700 p-6">

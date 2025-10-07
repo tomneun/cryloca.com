@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Palette, Image, Upload } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Palette, Image, Upload, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { useDesign } from '@/hooks/useDesign';
 
@@ -15,9 +16,12 @@ const THEMES = [
 ];
 
 const DesignTab = () => {
-  const { settings, updateLogo, updateTheme, updateBackground } = useDesign();
+  const { settings, updateLogo, updateTheme, updateBackground, updateCustomText, updateCustomImage } = useDesign();
   const [logoUrl, setLogoUrl] = useState(settings.logo);
   const [backgroundUrl, setBackgroundUrl] = useState(settings.background);
+  const [infoTitle, setInfoTitle] = useState(settings.customTexts['info_title'] || '');
+  const [infoContent, setInfoContent] = useState(settings.customTexts['info_content'] || '');
+  const [infoImage, setInfoImage] = useState(settings.customImages['info_banner'] || '');
 
   const handleLogoUpdate = () => {
     if (!logoUrl) {
@@ -36,6 +40,13 @@ const DesignTab = () => {
   const handleBackgroundUpdate = () => {
     updateBackground(backgroundUrl);
     toast.success('Hintergrund aktualisiert');
+  };
+
+  const handleInfoUpdate = () => {
+    updateCustomText('info_title', infoTitle);
+    updateCustomText('info_content', infoContent);
+    updateCustomImage('info_banner', infoImage);
+    toast.success('Info-Seite aktualisiert');
   };
 
   return (
@@ -152,6 +163,71 @@ const DesignTab = () => {
               />
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Info Page Management */}
+      <Card className="bg-gray-800 border-gray-700">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-6 w-6 text-yellow-400" />
+            Info-Seite verwalten
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="infoTitle" className="text-gray-300">Titel</Label>
+            <Input
+              id="infoTitle"
+              value={infoTitle}
+              onChange={(e) => setInfoTitle(e.target.value)}
+              className="bg-gray-700 border-gray-600 text-gray-100 mt-1"
+              placeholder="Shop News & Updates"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="infoContent" className="text-gray-300">Inhalt</Label>
+            <Textarea
+              id="infoContent"
+              value={infoContent}
+              onChange={(e) => setInfoContent(e.target.value)}
+              className="bg-gray-700 border-gray-600 text-gray-100 mt-1 min-h-[200px]"
+              placeholder="Geben Sie hier Neuigkeiten und Updates ein..."
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="infoImage" className="text-gray-300">Banner-Bild URL (optional)</Label>
+            <Input
+              id="infoImage"
+              value={infoImage}
+              onChange={(e) => setInfoImage(e.target.value)}
+              className="bg-gray-700 border-gray-600 text-gray-100 mt-1"
+              placeholder="/info-banner.jpg oder https://..."
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Lade Bilder in den /public Ordner hoch
+            </p>
+          </div>
+
+          {infoImage && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-400 mb-2">Vorschau:</p>
+              <img 
+                src={infoImage} 
+                alt="Info Banner" 
+                className="max-h-48 rounded"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+
+          <Button onClick={handleInfoUpdate} className="bg-yellow-600 hover:bg-yellow-700 w-full">
+            Info-Seite speichern
+          </Button>
         </CardContent>
       </Card>
     </div>

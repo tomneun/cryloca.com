@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/hooks/useSession';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, LogOut } from 'lucide-react';
+import { ShoppingBag, LogOut, Home } from 'lucide-react';
 const VendorHeader = () => {
   const { destroySession } = useSession();
   const navigate = useNavigate();
@@ -23,7 +23,12 @@ const VendorHeader = () => {
           </div>
           <div className="flex items-center gap-4">
             <Button variant="outline" onClick={() => navigate('/')} className="border-gray-600 text-gray-300 hover:bg-gray-700">
+              <Home className="h-4 w-4 mr-2" />
               Zum Marktplatz
+            </Button>
+            <Button variant="ghost" onClick={() => navigate('/login')} className="text-gray-400 hover:text-gray-100">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
             </Button>
             <Button variant="destructive" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />

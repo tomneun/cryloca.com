@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProducts } from '@/hooks/useProducts';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, ShoppingCart, LogOut } from 'lucide-react';
+import VendorContact from '@/components/VendorContact';
 
 const Shop = () => {
   const { pseudonym } = useParams<{ pseudonym: string }>();
@@ -55,18 +56,27 @@ const Shop = () => {
                 </div>
               </div>
             </div>
-            <Button
-              onClick={() => navigate('/checkout')}
-              className="bg-red-600 hover:bg-red-700 relative"
-            >
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              Warenkorb
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {getTotalItems()}
-                </span>
-              )}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => navigate('/checkout')}
+                className="bg-red-600 hover:bg-red-700 relative"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Warenkorb
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/login')}
+                className="text-gray-400 hover:text-gray-100"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -86,7 +96,11 @@ const Shop = () => {
             <p className="text-gray-500">Dieser Shop hat noch keine öffentlichen Produkte</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <>
+            <div className="mb-8">
+              <VendorContact vendorPseudonym={pseudonym} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
               <div key={product.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-red-500/50 transition-colors">
                 <div className="aspect-video bg-gray-700 relative">
@@ -106,7 +120,7 @@ const Shop = () => {
                   <h3 className="font-semibold mb-2 truncate">{product.title}</h3>
                   <p className="text-gray-400 text-sm mb-3 line-clamp-3">{product.description}</p>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-red-400 font-bold">{product.price} {product.currency}</span>
+                    <span className="text-red-400 font-bold">€{product.price.toFixed(2)}</span>
                     <span className="text-sm text-gray-500">Lager: {product.stock}</span>
                   </div>
                   <div className="flex gap-2">
@@ -137,7 +151,8 @@ const Shop = () => {
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          </>
         )}
       </div>
     </div>
