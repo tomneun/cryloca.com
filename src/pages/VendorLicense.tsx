@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ShoppingBag, Euro, ArrowLeft, User } from 'lucide-react';
 import AdminContact from '@/components/AdminContact';
-
 const VendorLicense = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -22,23 +21,19 @@ const VendorLicense = () => {
   const [licenseFee, setLicenseFee] = useState<number>(500);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
   useEffect(() => {
     const savedFee = localStorage.getItem('vendor_license_fee');
     if (savedFee) {
       setLicenseFee(parseFloat(savedFee));
     }
   }, []);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (!username || !password || !vendorCode || (!sessionId && !signalId) || !acceptedTerms) {
+    if (!username || !password || !vendorCode || !sessionId && !signalId || !acceptedTerms) {
       setError('Please fill in all required fields (Session-ID or Signal-ID required)');
       return;
     }
-
     if (!btcAddress && !xmrAddress && !usdcAddress && !ltcAddress) {
       setError('Please provide at least one crypto address for payouts');
       return;
@@ -47,7 +42,6 @@ const VendorLicense = () => {
     // Check if vendor code exists
     const vendorCodes = JSON.parse(localStorage.getItem('vendor_codes') || '[]');
     const codeExists = vendorCodes.find((c: any) => c.code === vendorCode && !c.isUsed);
-    
     if (!codeExists) {
       setError('Invalid or already used vendor code');
       return;
@@ -62,7 +56,6 @@ const VendorLicense = () => {
 
     // Generate license ID
     const licenseId = 'LIC-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-
     const licenseData = {
       id: licenseId,
       username,
@@ -77,7 +70,8 @@ const VendorLicense = () => {
         ltc: ltcAddress || ''
       },
       fee: licenseFee,
-      status: 'pending', // Admin must approve payment
+      status: 'pending',
+      // Admin must approve payment
       acceptedTerms: acceptedTerms,
       createdAt: new Date().toISOString()
     };
@@ -87,16 +81,15 @@ const VendorLicense = () => {
     localStorage.setItem('vendor_licenses', JSON.stringify(existingLicenses));
 
     // Mark vendor code as used
-    const updatedCodes = vendorCodes.map((c: any) => 
-      c.code === vendorCode ? { ...c, isUsed: true, usedBy: username } : c
-    );
+    const updatedCodes = vendorCodes.map((c: any) => c.code === vendorCode ? {
+      ...c,
+      isUsed: true,
+      usedBy: username
+    } : c);
     localStorage.setItem('vendor_codes', JSON.stringify(updatedCodes));
-
     navigate(`/license-thanks?licenseId=${licenseId}&username=${username}&fee=${licenseFee}`);
   };
-
-  return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4">
+  return <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4">
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -104,7 +97,7 @@ const VendorLicense = () => {
             <ShoppingBag className="h-8 w-8 text-red-500" />
             <h1 className="text-3xl font-bold">Vendor License Purchase</h1>
           </div>
-          <Button variant="outline" onClick={() => navigate('/rules')} className="border-gray-600 text-gray-300 hover:bg-gray-700">
+          <Button variant="outline" onClick={() => navigate('/rules')} className="border-gray-600 bg-slate-400 hover:bg-slate-300 text-slate-950">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Rules
           </Button>
@@ -141,66 +134,35 @@ const VendorLicense = () => {
                 <Label htmlFor="vendorCode" className="text-gray-300">
                   Vendor Registration Code (from Admin) *
                 </Label>
-                <Input 
-                  id="vendorCode" 
-                  value={vendorCode} 
-                  onChange={(e) => setVendorCode(e.target.value.toUpperCase())} 
-                  className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" 
-                  placeholder="VND-XXXXXXXX" 
-                />
+                <Input id="vendorCode" value={vendorCode} onChange={e => setVendorCode(e.target.value.toUpperCase())} className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" placeholder="VND-XXXXXXXX" />
               </div>
 
               <div>
                 <Label htmlFor="username" className="text-gray-300">
                   Desired Username *
                 </Label>
-                <Input 
-                  id="username" 
-                  value={username} 
-                  onChange={(e) => setUsername(e.target.value)} 
-                  className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" 
-                  placeholder="your_vendor_name" 
-                />
+                <Input id="username" value={username} onChange={e => setUsername(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" placeholder="your_vendor_name" />
               </div>
 
               <div>
                 <Label htmlFor="password" className="text-gray-300">
                   Password *
                 </Label>
-                <Input 
-                  id="password" 
-                  type="password"
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" 
-                  placeholder="Choose a secure password" 
-                />
+                <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" placeholder="Choose a secure password" />
               </div>
 
               <div>
                 <Label htmlFor="sessionId" className="text-gray-300">
                   Session-ID (optional if Signal provided)
                 </Label>
-                <Input 
-                  id="sessionId" 
-                  value={sessionId} 
-                  onChange={(e) => setSessionId(e.target.value)} 
-                  className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" 
-                  placeholder="Your Session Messenger ID" 
-                />
+                <Input id="sessionId" value={sessionId} onChange={e => setSessionId(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" placeholder="Your Session Messenger ID" />
               </div>
 
               <div>
                 <Label htmlFor="signalId" className="text-gray-300">
                   Signal Account ID (optional if Session provided)
                 </Label>
-                <Input 
-                  id="signalId" 
-                  value={signalId} 
-                  onChange={(e) => setSignalId(e.target.value)} 
-                  className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" 
-                  placeholder="Your Signal ID" 
-                />
+                <Input id="signalId" value={signalId} onChange={e => setSignalId(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100 focus:border-red-500" placeholder="Your Signal ID" />
               </div>
 
               <div className="space-y-3 pt-4 border-t border-gray-700">
@@ -209,46 +171,22 @@ const VendorLicense = () => {
                 
                 <div>
                   <Label htmlFor="btcAddress" className="text-gray-300">Bitcoin (BTC) Address</Label>
-                  <Input
-                    id="btcAddress"
-                    placeholder="bc1..."
-                    value={btcAddress}
-                    onChange={(e) => setBtcAddress(e.target.value)}
-                    className="mt-1 bg-gray-700 border-gray-600 text-gray-100"
-                  />
+                  <Input id="btcAddress" placeholder="bc1..." value={btcAddress} onChange={e => setBtcAddress(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100" />
                 </div>
 
                 <div>
                   <Label htmlFor="xmrAddress" className="text-gray-300">Monero (XMR) Address</Label>
-                  <Input
-                    id="xmrAddress"
-                    placeholder="4..."
-                    value={xmrAddress}
-                    onChange={(e) => setXmrAddress(e.target.value)}
-                    className="mt-1 bg-gray-700 border-gray-600 text-gray-100"
-                  />
+                  <Input id="xmrAddress" placeholder="4..." value={xmrAddress} onChange={e => setXmrAddress(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100" />
                 </div>
 
                 <div>
                   <Label htmlFor="usdcAddress" className="text-gray-300">USDC Address</Label>
-                  <Input
-                    id="usdcAddress"
-                    placeholder="0x..."
-                    value={usdcAddress}
-                    onChange={(e) => setUsdcAddress(e.target.value)}
-                    className="mt-1 bg-gray-700 border-gray-600 text-gray-100"
-                  />
+                  <Input id="usdcAddress" placeholder="0x..." value={usdcAddress} onChange={e => setUsdcAddress(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100" />
                 </div>
 
                 <div>
                   <Label htmlFor="ltcAddress" className="text-gray-300">Litecoin (LTC) Address</Label>
-                  <Input
-                    id="ltcAddress"
-                    placeholder="L..."
-                    value={ltcAddress}
-                    onChange={(e) => setLtcAddress(e.target.value)}
-                    className="mt-1 bg-gray-700 border-gray-600 text-gray-100"
-                  />
+                  <Input id="ltcAddress" placeholder="L..." value={ltcAddress} onChange={e => setLtcAddress(e.target.value)} className="mt-1 bg-gray-700 border-gray-600 text-gray-100" />
                 </div>
               </div>
 
@@ -262,11 +200,7 @@ const VendorLicense = () => {
                   <p>• Must comply with all platform rules</p>
                 </div>
                 <div className="flex items-center space-x-2 mt-4">
-                  <Checkbox 
-                    id="terms" 
-                    checked={acceptedTerms} 
-                    onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)} 
-                  />
+                  <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={checked => setAcceptedTerms(checked as boolean)} />
                   <Label htmlFor="terms" className="text-sm">
                     I accept the terms and conditions
                   </Label>
@@ -282,11 +216,7 @@ const VendorLicense = () => {
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full bg-red-600 hover:bg-red-700" 
-                disabled={!username.trim() || !password.trim() || !vendorCode.trim() || !acceptedTerms}
-              >
+              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700" disabled={!username.trim() || !password.trim() || !vendorCode.trim() || !acceptedTerms}>
                 Submit License Application
               </Button>
             </form>
@@ -295,8 +225,6 @@ const VendorLicense = () => {
       </div>
       
       <AdminContact />
-    </div>
-  );
+    </div>;
 };
-
 export default VendorLicense;

@@ -3,18 +3,17 @@ import { useSession } from '@/hooks/useSession';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, LogOut, Home } from 'lucide-react';
 const VendorHeader = () => {
-  const { destroySession } = useSession();
+  const {
+    destroySession
+  } = useSession();
   const navigate = useNavigate();
-  
   const handleLogout = () => {
     if (confirm('Möchten Sie Ihren Shop wirklich löschen? Alle Daten gehen verloren.')) {
       destroySession();
       navigate('/');
     }
   };
-  
-  return (
-    <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur mb-6">
+  return <header className="border-b border-gray-800 bg-gray-900/90 backdrop-blur mb-6">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -22,7 +21,7 @@ const VendorHeader = () => {
             <h1 className="text-xl font-bold">Mein Shop</h1>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => navigate('/')} className="border-gray-600 text-gray-300 hover:bg-gray-700">
+            <Button variant="outline" onClick={() => navigate('/')} className="border-gray-600 hover:bg-gray-700 text-orange-600">
               <Home className="h-4 w-4 mr-2" />
               Zum Marktplatz
             </Button>
@@ -37,7 +36,6 @@ const VendorHeader = () => {
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 };
 export default VendorHeader;
